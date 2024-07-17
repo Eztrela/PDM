@@ -46,41 +46,41 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun TutorialJetpack( modifier: Modifier = Modifier) {
-    Column {
-        val image = painterResource(id = R.drawable.ic_task_completed)
-        Image(painter = image, contentDescription = "imagem doidera", modifier=modifier.fillMaxWidth())
-        Text(
-            text = "Jetpack Compose tutorial",
-            modifier = modifier.padding(24.dp),
-            fontSize = 24.sp
-        )
-        Text(
-            text = "Jetpack Compose is a modern toolkit for building native Android UI. Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.\n",
-            modifier = modifier.padding(horizontal =16.dp),
-            textAlign = TextAlign.Justify
-        )
-        Text(
-            text = "In this tutorial, you build a simple UI component with declarative functions. You call Compose functions to say what elements you want and the Compose compiler does the rest. Compose is built around Composable functions. These functions let you define your app\\'s UI programmatically because they let you describe how it should look and provide data dependencies, rather than focus on the process of the UI\\'s construction, such as initializing an element and then attaching it to a parent. To create a Composable function, you add the @Composable annotation to the function name.\n",
-            modifier = modifier.padding(16.dp),
-            textAlign = TextAlign.Justify
-        )
+//@Composable
+//fun TutorialJetpack( modifier: Modifier = Modifier) {
+//    Column {
+//        val image = painterResource(id = R.drawable.ic_task_completed)
+//        Image(painter = image, contentDescription = "imagem doidera", modifier=modifier.fillMaxWidth())
+//        Text(
+//            text = "Jetpack Compose tutorial",
+//            modifier = modifier.padding(24.dp),
+//            fontSize = 24.sp
+//        )
+//        Text(
+//            text = "Jetpack Compose is a modern toolkit for building native Android UI. Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.\n",
+//            modifier = modifier.padding(horizontal =16.dp),
+//            textAlign = TextAlign.Justify
+//        )
+//        Text(
+//            text = "In this tutorial, you build a simple UI component with declarative functions. You call Compose functions to say what elements you want and the Compose compiler does the rest. Compose is built around Composable functions. These functions let you define your app\\'s UI programmatically because they let you describe how it should look and provide data dependencies, rather than focus on the process of the UI\\'s construction, such as initializing an element and then attaching it to a parent. To create a Composable function, you add the @Composable annotation to the function name.\n",
+//            modifier = modifier.padding(16.dp),
+//            textAlign = TextAlign.Justify
+//        )
+//
+//    }
+//}
 
-    }
-}
-
-@Composable
-fun AllDone(modifier: Modifier = Modifier){
-    Column(modifier = modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        val image = painterResource(id = R.drawable.bg_compose_background)
-        Image(painter = image, contentDescription = "doneImage")
-        Text(text = "All tasks Completed", modifier = modifier.padding(top = 24.dp, bottom = 8.dp), fontWeight = FontWeight.Bold)
-        Text(text = "Nice work!", fontSize = 16.sp)
-    }
-}
+//@Composable
+//fun AllDone(modifier: Modifier = Modifier){
+//    Column(modifier = modifier.fillMaxSize(),
+//    verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally) {
+//        val image = painterResource(id = R.drawable.bg_compose_background)
+//        Image(painter = image, contentDescription = "doneImage")
+//        Text(text = "All tasks Completed", modifier = modifier.padding(top = 24.dp, bottom = 8.dp), fontWeight = FontWeight.Bold)
+//        Text(text = "Nice work!", fontSize = 16.sp)
+//    }
+//}
 
 @Composable
 fun ScreenQuadrants(){
@@ -94,7 +94,8 @@ fun ScreenQuadrants(){
             ComposableCard(
                 cardTitle = stringResource(R.string.second_t),
                 cardDescription = stringResource(R.string.second_d),
-                Color(0xFFD0BCFF), modifier = Modifier.weight(1f))
+                cardBackground = Color(0xFFD0BCFF),
+                modifier = Modifier.weight(1f))
         }
         Row (Modifier.weight(1f)){
             ComposableCard(
@@ -124,8 +125,9 @@ private fun ComposableCard(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         ){
-        Text(text = cardTitle,
-            modifier = modifier.padding(bottom = 16.dp),
+        Text(
+            text = cardTitle,
+            modifier = Modifier.padding(bottom = 16.dp),
             fontWeight = FontWeight.Bold)
         Text(text = cardDescription,
             textAlign = TextAlign.Justify)
