@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GoogleCompose</string>
+    <string name="first_t">Text composable</string>
+    <string name="first_d">Displays text and follows the recommended Material Design guidelines.</string>
+    <string name="second_t">Text composable</string>
+    <string name="second_d">Displays text and follows the recommended Material Design guidelines.</string>
+    <string name="third_t">Text composable</string>
+    <string name="third_d">Displays text and follows the recommended Material Design guidelines.</string>
+    <string name="fourth_t">Text composable</string>
+    <string name="fourth_d">Displays text and follows the recommended Material Design guidelines.</string>
 </resources>

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,28 +86,48 @@ fun AllDone(modifier: Modifier = Modifier){
 fun ScreenQuadrants(){
     Column(Modifier.fillMaxWidth()) {
         Row (Modifier.weight(1f)){
-            ComposableCard(card_title = "Text composable", card_description = "Displays text and follows the recommended Material Design guidelines.\n", card_background = Color(0xFFEADDFF), modifier = Modifier.weight(1f))
-            ComposableCard(card_title = "Image composable", card_description = "Creates a composable that lays out and draws a given Painter class object.", card_background = Color(0xFFD0BCFF), modifier = Modifier.weight(1f))
+            ComposableCard(
+                cardTitle = stringResource(R.string.first_t),
+                cardDescription = stringResource(R.string.first_d),
+                cardBackground = Color(0xFFEADDFF),
+                modifier = Modifier.weight(1f))
+            ComposableCard(
+                cardTitle = stringResource(R.string.second_t),
+                cardDescription = stringResource(R.string.second_d),
+                Color(0xFFD0BCFF), modifier = Modifier.weight(1f))
         }
         Row (Modifier.weight(1f)){
-            ComposableCard(card_title = "Row composable", card_description = "A layout composable that places its children in a horizontal sequence.", card_background = Color(0xFFB69DF8), modifier = Modifier.weight(1f))
-            ComposableCard(card_title = "Column composable", card_description = "A layout composable that places its children in a vertical sequence.", card_background = Color(0xFFF6EDFF), modifier = Modifier.weight(1f))
+            ComposableCard(
+                cardTitle = stringResource(R.string.third_t),
+                cardDescription = stringResource(R.string.third_d),
+                cardBackground = Color(0xFFB69DF8),
+                modifier = Modifier.weight(1f))
+            ComposableCard(
+                cardTitle = stringResource(R.string.fourth_t),
+                cardDescription = stringResource(R.string.fourth_d),
+                cardBackground = Color(0xFFF6EDFF),
+                modifier = Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun ComposableCard( card_title: String, card_description: String, card_background: Color, modifier: Modifier = Modifier){
+private fun ComposableCard(
+    cardTitle: String,
+    cardDescription: String,
+    cardBackground: Color,
+    modifier: Modifier = Modifier){
     Column(modifier = modifier
-        .background(card_background)
-        .padding(16.dp)
-        .fillMaxSize(),
+            .fillMaxSize()
+            .background(cardBackground)
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = card_title,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        ){
+        Text(text = cardTitle,
             modifier = modifier.padding(bottom = 16.dp),
             fontWeight = FontWeight.Bold)
-        Text(text = card_description,
+        Text(text = cardDescription,
             textAlign = TextAlign.Justify)
 
     }
