@@ -71,7 +71,7 @@ fun ArtGallery(modifier: Modifier = Modifier) {
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom) {
-        Row (Modifier.padding(20.dp,50.dp)){
+        Row (Modifier.padding(20.dp,50.dp).weight(3f)){
 
             val image = painterResource(pictures[actualPicture].pictureReference)
             Image(painter = image, contentDescription = "art")
