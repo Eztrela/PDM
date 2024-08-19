@@ -1,40 +1,80 @@
 package com.example.myapp
 
-import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.myapp.ui.theme.MyAppTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.myapp.ui.telas.TelaLogin
+import com.example.myapp.ui.telas.TelaPrincipal
+import com.example.myapp.ui.telas.TelaRegister
+import com.example.navegacao1.ui.theme.Navegacao1Theme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
         setContent {
-            MyAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ButtonExamples()
+            Navegacao1Theme {
+                var currentRoute by remember { mutableStateOf("Login") }
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(currentRoute) },
+                            Modifier.background(MaterialTheme.colorScheme.secondary)
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "login") {
+                        composable("login") {
+                            TelaLogin(modifier = Modifier.padding(innerPadding), onSigninClick = {
+                                currentRoute = "Principal"
+                                navController.navigate("principal")
+                            }, onRegisterClick = {
+                                currentRoute = "Register"
+                                navController.navigate("register")
+                            })
+                        }
+                        composable("principal") {
+                            TelaPrincipal(modifier = Modifier.padding(innerPadding), onLogoffClick = {
+                                currentRoute = "Login"
+                                navController.navigate("login")
+                            })
+                        }
+                        composable("Register") {
+                            TelaRegister(
+                                modifier = Modifier.padding(innerPadding),
+                                onRegisterClick = {
+                                    currentRoute = "Login"
+                                    navController.navigate("login")
+                                }, onBackClick = {
+                                    currentRoute = "Login"
+                                    navController.navigate("login")
+                                })
+                        }
+                    }
+
                 }
             }
         }
@@ -42,84 +82,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ButtonExamples() {
-    Column(
-        modifier = Modifier
-            .padding(48.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text("Filled button:")
-        FilledButtonExample(onClick = { Log.d("Filled button", "Filled button clicked.") })
-        Text("Filled tonal button:")
-        FilledTonalButtonExample(onClick = { Log.d("Filled tonal button", "Filled tonal button clicked.") })
-        Text("Elevated button:")
-        ElevatedButtonExample(onClick = { Log.d("Elevated button", "Elevated button clicked.") })
-        Text("Outlined button:")
-        OutlinedButtonExample(onClick = { Log.d("Outlined button", "Outlined button clicked.") })
-        Text("Text button")
-        TextButtonExample(onClick = { Log.d("Text button", "Text button clicked.") })
-    }
-}
-
-// [START android_compose_components_filledbutton]
-@Composable
-fun FilledButtonExample(onClick: () -> Unit) {
-    Button(onClick = { onClick() }, enabled = false) {
-        Text("Filled disabled")
-    }
-    Button(onClick = { onClick() }, enabled = true) {
-        Text("Filled enabled")
-    }
-}
-// [END android_compose_components_filledbutton]
-
-// [START android_compose_components_filledtonalbutton]
-@Composable
-fun FilledTonalButtonExample(onClick: () -> Unit) {
-    FilledTonalButton(onClick = { onClick() }, shape = ShapeDefaults.ExtraSmall, colors = ButtonDefaults.filledTonalButtonColors(
-        Color(0xFFAA00FF))) {
-        Text("Tonal", color = Color.White)
-    }
-}
-// [END android_compose_components_filledtonalbutton]
-
-// [START android_compose_components_elevatedbutton]
-@Composable
-fun ElevatedButtonExample(onClick: () -> Unit) {
-    ElevatedButton(onClick = { onClick() }, colors = ButtonDefaults.elevatedButtonColors(Color(0xFFAA00FF), Color.White, Color(0x33AA00FF)),) {
-        Text("Elevated enabled")
-    }
-    ElevatedButton(onClick = { onClick() }, colors = ButtonDefaults.elevatedButtonColors(Color(0xFFAA00FF), Color.White, Color(0x33AA00FF)), enabled = false) {
-        Text("Elevated disabled")
-    }
-}
-// [END android_compose_components_elevatedbutton]
-
-// [START android_compose_components_outlinedbutton]
-@Composable
-fun OutlinedButtonExample(onClick: () -> Unit) {
-    OutlinedButton(onClick = { onClick() }) {
-        Text("Outlined")
-    }
-}
-// [END android_compose_components_outlinedbutton]
-
-// [START android_compose_components_textbutton]
-@Composable
-fun TextButtonExample(onClick: () -> Unit) {
-    TextButton(
-        onClick = { onClick() }
-    ) {
-        Text("Text Button")
-    }
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+//    TelaLogin()
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    MyAppTheme {
-        ButtonExamples()
+    Navegacao1Theme {
+//        TelaLogin()
     }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723653836069",
+    "project_id": "pratica-firestore",
+    "storage_bucket": "pratica-firestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723653836069:android:514e1960239eaeff53eecc",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDstuOZz8-V1EHMeDgyn7JRpv0tgMVn2VY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
