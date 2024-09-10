@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,8 +35,8 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
     var endereco by remember { mutableStateOf<Endereco>(Endereco()) }
     var usuarioIdToFind by remember { mutableStateOf("") }
     var usuarioEncontrado by remember { mutableStateOf<Usuario?>(null) }
+    var mensagemErro by remember { mutableStateOf("") }
 
-    // Campos para adicionar um novo usuário
     var novoUsuarioNome by remember { mutableStateOf("") }
     var novoUsuarioSenha by remember { mutableStateOf("") }
 
@@ -52,16 +52,26 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
             value = usuarioIdToFind,
             onValueChange = { usuarioIdToFind = it },
             label = { Text("Buscar por ID") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
         )
         Button(
             onClick = {
                 scope.launch {
-                    usuarioEncontrado = buscarUsuarioPorId(usuarioIdToFind)
+                    try {
+                        usuarioEncontrado = buscarUsuarioPorId(usuarioIdToFind)
+                        if (usuarioEncontrado == null) {
+                            mensagemErro = "Usuário não encontrado."
+                        } else {
+                            mensagemErro = ""
+                        }
+                    } catch (e: Exception) {
+                        mensagemErro = "Ocorreu um erro ao buscar o usuário."
+                    }
                 }
             },
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Text("Buscar Usuário por ID")
         }
@@ -70,11 +80,19 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
             Text("Usuário Encontrado:", style = MaterialTheme.typography.titleMedium)
             Text("Nome: ${usuarioEncontrado!!.nome}", style = MaterialTheme.typography.bodyLarge)
             Text("ID: ${usuarioEncontrado!!.id}", style = MaterialTheme.typography.bodyMedium)
-            Text("Senha: ${usuarioEncontrado!!.senha}", style = MaterialTheme.typography.bodyMedium) // Atenção: Exibir senha pode não ser seguro
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Text("Senha: ${usuarioEncontrado!!.senha}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Campos para adicionar um novo usuário
+        if (mensagemErro.isNotEmpty()) {
+            Text(
+                text = mensagemErro,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
         Text(
             text = "Adicionar Novo Usuário",
             style = MaterialTheme.typography.titleMedium,
@@ -84,15 +102,17 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
             value = novoUsuarioNome,
             onValueChange = { novoUsuarioNome = it },
             label = { Text("Nome do Novo Usuário") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
         )
         TextField(
             value = novoUsuarioSenha,
             onValueChange = { novoUsuarioSenha = it },
             label = { Text("Senha do Novo Usuário") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
         Button(
@@ -101,10 +121,10 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
                     val novoId = gerarIdUnico()
                     val novoUsuario = Usuario(id = novoId, nome = novoUsuarioNome, senha = novoUsuarioSenha)
                     val usuarioAdicionado = addUsuario(novoUsuario)
-                    usuarios = usuarios + usuarioAdicionado // Atualiza a lista com o novo usuário
+                    usuarios = usuarios + usuarioAdicionado
                 }
             },
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Text("Adicionar Usuário")
         }
@@ -113,29 +133,20 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
             onClick = {
                 scope.launch {
                     usuarios = getUsuarios()
-                    endereco = getEndereco() // Atualiza o endereço
                 }
             },
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Text("Carregar")
         }
 
         Button(
             onClick = { onLogoffClick() },
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Sair")
         }
 
-        // Exibe o endereço
-        Text(
-            text = "Endereço: ${endereco.logradouro}",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-
-        // Carrega sob demanda à medida que o usuário rola na tela
         LazyColumn {
             items(usuarios) { usuario ->
                 Card(
@@ -147,8 +158,7 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(text = "Nome: ${usuario.nome}", style = MaterialTheme.typography.bodyLarge)
                         Text(text = "ID: ${usuario.id}", style = MaterialTheme.typography.bodyMedium)
-                        // Exibindo outras informações do usuário se necessário
-                        Text(text = "Senha: ${usuario.senha}", style = MaterialTheme.typography.bodyMedium) // Atenção: Exibir senha pode não ser seguro
+                        Text(text = "Senha: ${usuario.senha}", style = MaterialTheme.typography.bodyMedium)
 
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -156,10 +166,10 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
                             onClick = {
                                 scope.launch {
                                     excluirUsuario(usuario.id)
-                                    usuarios = usuarios.filter { it.id != usuario.id } // Atualiza a lista após exclusão
+                                    usuarios = usuarios.filter { it.id != usuario.id }
                                 }
                             },
-                            modifier = Modifier.align(Alignment.End)
+                            modifier = Modifier
                         ) {
                             Text("Excluir Usuário")
                         }
@@ -171,8 +181,16 @@ fun TelaPrincipal(modifier: Modifier = Modifier, onLogoffClick: () -> Unit) {
 }
 
 suspend fun buscarUsuarioPorId(id: String): Usuario? {
-    return withContext(Dispatchers.IO) {
-        RetrofitClient.usuarioService.buscarPorId(id)
+    return try {
+        withContext(Dispatchers.IO) {
+            RetrofitClient.usuarioService.buscarPorId(id)
+        }
+    } catch (e: retrofit2.HttpException) {
+        if (e.code() == 404) {
+            null
+        } else {
+            throw e
+        }
     }
 }
 
